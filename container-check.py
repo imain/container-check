@@ -12,11 +12,12 @@
 #    under the License.
 
 import argparse
-import sys
 import subprocess
 import logging
 import multiprocessing
 import os
+import sys
+import yum
 
 log = logging.getLogger()
 log.setLevel(logging.DEBUG)
@@ -130,10 +131,12 @@ def yum_update_container((container, name)):
 
 def get_available_rpms():
     available_rpms = {}
-    available_rpms_list = [line.rstrip('\n') for line in open(opts.rpm_list)]
-    for rpm in available_rpms_list:
-        available_rpms[rpm] = 1
-
+    yb = yum.YumBase()
+    yb.setCacheDir()
+    pkglist = yb.doPackageLists(pkgnarrow='all')
+    for pkg in pkglist.available:
+        # This gives us a string the same as rpm -qa
+        available_rpms[pkg.name + '-' + pkg.vra] = 1
     return available_rpms
 
 
