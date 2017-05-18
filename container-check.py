@@ -132,6 +132,8 @@ def yum_update_container((container, name)):
 def get_available_rpms():
     available_rpms = {}
     yb = yum.YumBase()
+    yb.doConfigSetup(fn='etc/yum.conf', root='./',
+            init_plugins=True, debuglevel=4, errorlevel=None)
     yb.setCacheDir()
     pkglist = yb.doPackageLists(pkgnarrow='all')
     for pkg in pkglist.available:

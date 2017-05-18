@@ -1,0 +1,6 @@
+[delorean]
+name=delorean-openstack-mistral-ui-aff5d8f30d73cf34e9a52a0b070143f128e37e79
+baseurl=https://trunk.rdoproject.org/centos7/af/f5/aff5d8f30d73cf34e9a52a0b070143f128e37e79_57e4b623
+enabled=1
+gpgcheck=0
+priority=1
