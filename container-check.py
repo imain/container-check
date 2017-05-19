@@ -94,6 +94,8 @@ def yum_update_container((container, name)):
 
     dcmd = ['/usr/bin/docker', 'run',
             '--user', 'root',
+            '--net', 'host',
+            '--volume', os.getcwd() + '/etc/yum.repos.d:/etc/yum.repos.d',
             '--name', container_name,
             container]
 
@@ -184,11 +186,11 @@ if __name__ == '__main__':
                 container_update_list[container].append(rpm)
 
     for container in container_update_list:
-        print("Container needs updating: %s" % container)
+        log.info("Container needs updating: %s" % container)
         for rpm in container_update_list[container]:
-            print("  rpm: %s" % rpm)
+            log.info("  rpm: %s" % rpm)
 
-    # And finally update the containers if requried
+    # And finally update the containers if required
     if opts.update:
         process_map = []
         name = 0
