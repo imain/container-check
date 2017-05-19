@@ -1,8 +1,0 @@
-docker.io/tripleoupstream/centos-binary-heat-engine:latest
-docker.io/tripleoupstream/centos-binary-nova-placement-api:latest
-docker.io/tripleoupstream/centos-binary-glance-api:latest
-docker.io/tripleoupstream/centos-binary-swift-proxy-server:latest
-docker.io/tripleoupstream/centos-binary-mistral-api:latest
-docker.io/tripleoupstream/centos-binary-ironic-pxe:latest
-docker.io/tripleoupstream/centos-binary-keystone:latest
-docker.io/tripleoupstream/centos-binary-neutron-openvswitch-agent:latest
