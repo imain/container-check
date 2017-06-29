@@ -18,6 +18,7 @@ import multiprocessing
 import os
 import sys
 import yum
+import yaml
 
 log = logging.getLogger()
 log.setLevel(logging.DEBUG)
@@ -32,8 +33,8 @@ def parse_opts(argv):
     parser = argparse.ArgumentParser("Tool to let you know what packages need"
                                      "updating in a list of containers")
     parser.add_argument('-c', '--containers',
-                        help="""File containing a list of containers to inspect.""",
-                        default='container_list')
+                        help="""YAML File containing a list of containers to inspect.""",
+                        default='overcloud_containers.yaml')
     parser.add_argument('-p', '--process-count',
                         help="""Number of processes to use in the pool when running docker containers.""",
                         default=multiprocessing.cpu_count())
@@ -144,14 +145,27 @@ def get_available_rpms():
     return available_rpms
 
 
+def get_container_list(container_file):
+    with open(container_file) as cf:
+        data = yaml.safe_load(cf.read()).get('container_images')
+        if not data:
+            return None
+        container_list = []
+        for key in data:
+            print key
+            container_list.append(key['imagename'])
+        log.debug(container_list)
+        return container_list
+
+
 if __name__ == '__main__':
     opts = parse_opts(sys.argv)
 
+    # Get a list of all the docker containers we need to inspect.
+    docker_containers = get_container_list(opts.containers)
+
     # Load up available rpms as a hash containing the latest versions of rpms.
     available_rpms = get_available_rpms()
-
-    # Get a list of all the docker containers we need to inspect.
-    docker_containers = [line.rstrip('\n') for line in open(opts.containers)]
 
     # Holds all the information for each process to consume.
     # Instead of starting them all linearly we run them using a process
