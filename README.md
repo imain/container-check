@@ -1,10 +1,9 @@
-Package Check
-=============
+Container Check
+===============
 
-This is a simple python program that takes a list of containers and a list of rpms
-and checks to see if any of the containers need updating based on the rpm lists.
-
-If the --update argument is passed it will call yum update in the required containers.
+This is a simple script that checks your yum repos vs a list of containers.  It can
+then tell you which containers need updating and optionaly update them if the --update
+argument is passed.
 
 Some notes:
 
