@@ -38,9 +38,6 @@ def parse_opts(argv):
     parser.add_argument('-p', '--process-count',
                         help="""Number of processes to use in the pool when running docker containers.""",
                         default=multiprocessing.cpu_count())
-    parser.add_argument('-r', '--rpm-list',
-                        help="""File containing a list of the latest available rpms.""",
-                        default="rpm_list")
     parser.add_argument('-u', '--update',
                         action='store_true',
                         help="""Run yum update in any containers that need updating.""",
@@ -96,7 +93,7 @@ def yum_update_container((container, name)):
     dcmd = ['/usr/bin/docker', 'run',
             '--user', 'root',
             '--net', 'host',
-            '--volume', os.getcwd() + '/etc/yum.repos.d:/etc/yum.repos.d',
+            '--volume', '/etc/yum.repos.d:/etc/yum.repos.d',
             '--name', container_name,
             container]
 
