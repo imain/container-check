@@ -147,8 +147,7 @@ def get_container_list(container_file):
             return None
         container_list = []
         for key in data:
-            print key
-            container_list.append(key['imagename'])
+            container_list.append(data[key])
         log.debug(container_list)
         return container_list
 
