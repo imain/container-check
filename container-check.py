@@ -34,7 +34,7 @@ def parse_opts(argv):
                                      "updating in a list of containers")
     parser.add_argument('-c', '--containers',
                         help="""YAML File containing a list of containers to inspect.""",
-                        default='overcloud_containers.yaml')
+                        default='docker-centos-rdo.yaml')
     parser.add_argument('-p', '--process-count',
                         help="""Number of processes to use in the pool when running docker containers.""",
                         default=multiprocessing.cpu_count())
@@ -142,7 +142,7 @@ def get_available_rpms():
 
 def get_container_list(container_file):
     with open(container_file) as cf:
-        data = yaml.safe_load(cf.read()).get('container_images')
+        data = yaml.safe_load(cf.read()).get('parameter_defaults')
         if not data:
             return None
         container_list = []
