@@ -34,7 +34,7 @@ def parse_opts(argv):
                                      "updating in a list of containers")
     parser.add_argument('-c', '--containers',
                         help="""YAML File containing a list of containers to inspect.""",
-                        default='docker-centos-rdo.yaml')
+                        default='overcloud_containers.yaml')
     parser.add_argument('-p', '--process-count',
                         help="""Number of processes to use in the pool when running docker containers.""",
                         default=multiprocessing.cpu_count())
@@ -133,8 +133,8 @@ def get_available_rpms():
     available_rpms = {}
     yb = yum.YumBase()
     yb.setCacheDir()
-    pkglist = yb.doPackageLists(pkgnarrow='all')
-    for pkg in pkglist.available:
+    pkglist = yb.pkgSack.returnPackages()
+    for pkg in pkglist:
         # This gives us a string the same as rpm -qa
         available_rpms[pkg.name + '-' + pkg.vra] = 1
     return available_rpms
@@ -142,13 +142,13 @@ def get_available_rpms():
 
 def get_container_list(container_file):
     with open(container_file) as cf:
-        data = yaml.safe_load(cf.read()).get('parameter_defaults')
+        data = yaml.safe_load(cf.read()).get('container_images')
         if not data:
             return None
         container_list = []
-        for key in data:
-            container_list.append(data[key])
-        log.debug(container_list)
+        for image_info in data:
+            print('image_info: %s' % image_info)
+            container_list.append('%s/%s' % (image_info['pull_source'], image_info['imagename']))
         return container_list
 
 
@@ -160,6 +160,8 @@ if __name__ == '__main__':
 
     # Load up available rpms as a hash containing the latest versions of rpms.
     available_rpms = get_available_rpms()
+    #for rpm in available_rpms.keys():
+        #print('available rpm: %s' % rpm)
 
     # Holds all the information for each process to consume.
     # Instead of starting them all linearly we run them using a process
@@ -188,7 +190,7 @@ if __name__ == '__main__':
 
     for container in container_rpms:
         for rpm in container_rpms[container]:
-            if len(rpm) > 0 and not rpm in available_rpms:
+            if len(rpm) > 0 and not rpm.startswith('gpg-pubkey-') and not rpm in available_rpms:
                 if container not in container_update_list:
                     container_update_list[container] = []
                 container_update_list[container].append(rpm)
@@ -197,6 +199,8 @@ if __name__ == '__main__':
         log.info("Container needs updating: %s" % container)
         for rpm in container_update_list[container]:
             log.info("  rpm: %s" % rpm)
+
+    log.info('*** %d of %d containers require updates ***' % (len(container_update_list), len(docker_containers)))
 
     # And finally update the containers if required
     if opts.update:
