@@ -104,6 +104,7 @@ def yum_update_container((container, name)):
     subproc = subprocess.Popen(dcmd, stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
     cmd_stdout, cmd_stderr = subproc.communicate()
+    debug.info(cmd.stdout)
     if subproc.returncode != 0:
         log.error('Failed running yum update for %s' % container)
         log.error(cmd_stderr)
