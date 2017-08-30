@@ -104,7 +104,7 @@ def yum_update_container((container, name)):
     subproc = subprocess.Popen(dcmd, stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
     cmd_stdout, cmd_stderr = subproc.communicate()
-    debug.info(cmd.stdout)
+    log.info(cmd_stdout)
     if subproc.returncode != 0:
         log.error('Failed running yum update for %s' % container)
         log.error(cmd_stderr)
@@ -149,7 +149,8 @@ def get_container_list(container_file):
         container_list = []
         for image_info in data:
             print('image_info: %s' % image_info)
-            container_list.append('%s/%s' % (image_info['pull_source'], image_info['imagename']))
+            container_list.append('%s/%s' % (image_info['push_destination'], 
+					     image_info['imagename']))
         return container_list
 
 

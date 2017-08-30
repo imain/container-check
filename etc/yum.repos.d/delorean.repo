@@ -1,6 +1,0 @@
-[delorean]
-name=delorean-openstack-tripleo-heat-templates-86a355865c8f2eea102601be125cbb58f283f04d
-baseurl=https://trunk.rdoproject.org/centos7/86/a3/86a355865c8f2eea102601be125cbb58f283f04d_7e353bed
-enabled=1
-gpgcheck=0
-priority=1

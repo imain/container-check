@@ -1,0 +1,7 @@
+container_images:
+- imagename: master/centos-binary-aodh-api:tripleo-ci-testing
+  pull_source: trunk.registry.rdoproject.org
+  push_destination: 192.168.24.1:8787
+- imagename: master/centos-binary-aodh-evaluator:tripleo-ci-testing
+  pull_source: trunk.registry.rdoproject.org
+  push_destination: 192.168.24.1:8787
