@@ -43,6 +43,12 @@ def parse_opts(argv):
                         default=False)
     opts = parser.parse_args(argv[1:])
 
+    try:
+        opts = parser.parse_args()
+    except:
+        parser.print_help()
+        sys.exit(0)
+
     return opts
 
 
