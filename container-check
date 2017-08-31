@@ -149,8 +149,8 @@ def get_container_list(container_file):
         container_list = []
         for image_info in data:
             print('image_info: %s' % image_info)
-            container_list.append('%s/%s' % (image_info['push_destination'], 
-					     image_info['imagename']))
+            container_list.append('%s/%s' % (image_info['push_destination'],
+                                             image_info['imagename']))
         return container_list
 
 
