@@ -33,8 +33,7 @@ def parse_opts(argv):
     parser = argparse.ArgumentParser("Tool to let you know what packages need"
                                      "updating in a list of containers")
     parser.add_argument('-c', '--containers',
-                        help="""YAML File containing a list of containers to inspect.""",
-                        default='overcloud_containers.yaml')
+                        help="""YAML File containing a list of containers to inspect.""")
     parser.add_argument('-p', '--process-count',
                         help="""Number of processes to use in the pool when running docker containers.""",
                         default=multiprocessing.cpu_count())
