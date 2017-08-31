@@ -32,7 +32,7 @@ log.addHandler(ch)
 def parse_opts(argv):
     parser = argparse.ArgumentParser("Tool to let you know what packages need"
                                      "updating in a list of containers")
-    parser.add_argument('-c', '--containers',
+    parser.add_argument('-c', '--containers', required=True,
                         help="""YAML File containing a list of containers to inspect.""")
     parser.add_argument('-p', '--process-count',
                         help="""Number of processes to use in the pool when running docker containers.""",
@@ -42,13 +42,6 @@ def parse_opts(argv):
                         help="""Run yum update in any containers that need updating.""",
                         default=False)
     opts = parser.parse_args(argv[1:])
-
-    try:
-        opts = parser.parse_args()
-    except:
-        parser.print_help()
-        sys.exit(0)
-
     return opts
 
 
