@@ -8,5 +8,6 @@ argument is passed.
 Notes
 -----
 
+- It mounts in your local /etc/yum configuration for updates.
 - It uses a process pool to run containers in parallel.
 - It commits the containers back with the same tag.
