@@ -91,6 +91,7 @@ def yum_update_container((container, name)):
             '--user', 'root',
             '--net', 'host',
             '--volume', '/etc/yum.repos.d:/etc/yum.repos.d',
+            '--volume', '/opt:/opt',
             '--name', container_name,
             container]
 
