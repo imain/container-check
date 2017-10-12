@@ -113,16 +113,25 @@ def yum_update_container((container, name)):
             '-m', 'automatic yum update',
             container_name,
             container]
-
     log.info('Running docker command: %s' % ' '.join(dcmd))
 
     subproc = subprocess.Popen(dcmd, stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
     cmd_stdout, cmd_stderr = subproc.communicate()
     if subproc.returncode != 0:
-        log.error('Failed running docker commit in %s' % container)
+        log.error('Failed running docker commit for %s' % container)
         log.error(cmd_stderr)
 
+    dcmd = ['/usr/bin/docker', 'push',
+            container]
+    log.info('Running docker command: %s' % ' '.join(dcmd))
+
+    subproc = subprocess.Popen(dcmd, stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+    cmd_stdout, cmd_stderr = subproc.communicate()
+    if subproc.returncode != 0:
+        log.error('Failed running docker push for %s' % container)
+        log.error(cmd_stderr)
     rm_container(container_name)
 
     return (subproc.returncode, container)
