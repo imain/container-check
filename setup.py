@@ -17,7 +17,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='1.0',
+    version='1.0.3',
 
     description='Tool for checking and updating rpm based containers.',
     long_description=long_description,
@@ -45,7 +45,7 @@ setup(
         'Topic :: System :: Archiving :: Packaging',
 
         # Pick your license as you wish (should match "license" above)
-        'License :: OSI Approved :: Apache Software License'
+        'License :: OSI Approved :: Apache Software License',
 
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
@@ -72,7 +72,7 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['multiprocessing', 'logging', 'argparse'],
+    install_requires=[],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
