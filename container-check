@@ -15,7 +15,6 @@ import argparse
 import subprocess
 import logging
 import multiprocessing
-import os
 import sys
 import yum
 import yaml
@@ -53,8 +52,8 @@ def rm_container(name):
     if cmd_stdout:
         log.debug(cmd_stdout)
     if cmd_stderr and \
-           cmd_stderr != 'Error response from daemon: ' \
-           'No such container: {}\n'.format(name):
+            cmd_stderr != 'Error response from daemon: ' \
+            'No such container: {}\n'.format(name):
         log.debug(cmd_stderr)
 
 
@@ -87,6 +86,17 @@ def yum_update_container((container, name)):
 
     rm_container(container_name)
 
+    # Get the command from the original so that when we commit
+    # we can ensure the command doesn't get updated.
+    dcmd = ['/usr/bin/docker', 'inspect',
+            '--format', '{{json .Config.Cmd}}',
+            container]
+    subproc = subprocess.Popen(dcmd, stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+    cmd_stdout, cmd_stderr = subproc.communicate()
+    container_cmd = cmd_stdout
+    log.info('Original container command: %s' % container_cmd)
+
     dcmd = ['/usr/bin/docker', 'run',
             '--user', 'root',
             '--net', 'host',
@@ -111,6 +121,7 @@ def yum_update_container((container, name)):
 
     dcmd = ['/usr/bin/docker', 'commit',
             '-m', 'automatic yum update',
+            '--change', 'CMD %s' % container_cmd,
             container_name,
             container]
     log.info('Running docker command: %s' % ' '.join(dcmd))
@@ -168,8 +179,6 @@ if __name__ == '__main__':
 
     # Load up available rpms as a hash containing the latest versions of rpms.
     available_rpms = get_available_rpms()
-    #for rpm in available_rpms.keys():
-        #print('available rpm: %s' % rpm)
 
     # Holds all the information for each process to consume.
     # Instead of starting them all linearly we run them using a process
@@ -198,7 +207,7 @@ if __name__ == '__main__':
 
     for container in container_rpms:
         for rpm in container_rpms[container]:
-            if len(rpm) > 0 and not rpm.startswith('gpg-pubkey-') and not rpm in available_rpms:
+            if len(rpm) > 0 and not rpm.startswith('gpg-pubkey-') and rpm not in available_rpms:
                 if container not in container_update_list:
                     container_update_list[container] = []
                 container_update_list[container].append(rpm)
