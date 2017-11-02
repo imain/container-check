@@ -107,17 +107,26 @@ def yum_update_container((container, name)):
 
     dcmd.extend(['yum', '-y', 'update'])
 
-    log.info('Running docker command: %s' % ' '.join(dcmd))
+    retry_count = 1
+    while True:
+        log.info('Running docker command: %s' % ' '.join(dcmd))
 
-    subproc = subprocess.Popen(dcmd, stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE)
-    cmd_stdout, cmd_stderr = subproc.communicate()
-    log.info(cmd_stdout)
-    if subproc.returncode != 0:
-        log.error('Failed running yum update for %s' % container)
-        log.error(cmd_stderr)
-        rm_container(container_name)
-        return (subproc.returncode, container)
+        subproc = subprocess.Popen(dcmd, stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE)
+        cmd_stdout, cmd_stderr = subproc.communicate()
+        log.info(cmd_stdout)
+        if subproc.returncode != 0:
+            log.error('Failed running yum update for %s; try number %d' %
+                    (container, retry_count))
+            log.error(cmd_stderr)
+            rm_container(container_name)
+            if retry_count >= 3:
+                log.error('Tried %d times to update %s; giving up.' %
+                        (retry_count, container))
+                return (subproc.returncode, container)
+        else:
+            break
+        retry_count += 1
 
     dcmd = ['/usr/bin/docker', 'commit',
             '-m', 'automatic yum update',
