@@ -238,7 +238,7 @@ if __name__ == '__main__':
         process_map = []
         name = 0
         for container in container_update_list:
-            process_map.append([container, str(name), opts.packages])
+            process_map.extend([container, str(name), opts.packages])
             name += 1
 
         ret = list(p.map(yum_update_container, process_map))
