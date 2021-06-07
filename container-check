@@ -83,6 +83,9 @@ def populate_container_rpms_list(container):
     return (subproc.returncode, container, rpms)
 
 
+def yum_update_container_wrapper(args):
+    return yum_update_container(*args)
+
 def yum_update_container(container, name, packages):
 
     container_name = 'yum-update-%s' % name
@@ -238,10 +241,10 @@ if __name__ == '__main__':
         process_map = []
         name = 0
         for container in container_update_list:
-            process_map.append([container, str(name), opts.packages])
+            process_map.append((container, str(name), opts.packages))
             name += 1
 
-        ret = list(p.map(yum_update_container, process_map))
+        ret = list(p.map(yum_update_container_wrapper, process_map))
         for returncode, container in ret:
             if returncode != 0:
                 log.error('ERROR running yum update in container %s' % container)
